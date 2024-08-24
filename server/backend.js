@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const path = require('path');
+require('dotenv').config(); // Load environment variables
 const app = express();
 
 
@@ -33,8 +34,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const transporter = nodemailer.createTransport({
   service: 'Gmail', // You can use other services like 'Yahoo', 'Outlook', etc.
   auth: {
-    user: 'rampathi07@gmail.com', // Replace with your email
-    pass: 'Rampo@!999', // Replace with your email password or app password
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
   },
 });
 
@@ -50,7 +51,7 @@ app.post('/send-email', upload.single('image'), (req, res) => {
   const imageUrl = `http://localhost:5000/uploads/${image.filename}`;
 
   const mailOptions = {
-    from: 'rampathi07@gmail.com', // Sender's email address
+    from: process.env.EMAIL_USER, // Sender's email address
     to: 'bhaveshsah88@gmail.com', // Recipient's email address
     subject: 'Rescue Request',
     text: `Rescue request from ${name} at location: ${location}.`,
@@ -77,7 +78,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://Bhavesh:SafePaws123@animal-details.dgght.mongodb.net/?retryWrites=true&w=majority&appName=Animal-Details', {
+mongoose.connect(process.env.MONGODB_URI, {
  
 });
 
